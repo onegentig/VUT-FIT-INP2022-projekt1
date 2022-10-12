@@ -1,3 +1,9 @@
+## IDE
 .vscode
+
+## Private files
+**-private**
+
+## Project files to hide
 /test
 requirements.txt
