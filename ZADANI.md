@@ -3,8 +3,11 @@
 *(originál: [MOODLE](https://moodle.vut.cz/pluginfile.php/508722/mod_resource/content/1/project1.pdf))*
 
 > **Datum zadání:** *10.10.2022*
+> 
 > **Datum odevzdání:** *13.11.2022 23:59*
+> 
 > **Forma odezdání:** *IS VUT, 4 soubory*
+> 
 > **Max. počet bodů:** *23*
 
 Cílem tohoto projektu je implementovat pomocí VHDL **procesor**, který bude schopen vykonávat program napsaný v supersetu ezoterického jazyka [**Brainfuck**](https://esolangs.org/wiki/Brainfuck) - jedná se o výpočetně úplnou sadu ačkoliv používa pouze osm příkazů.
