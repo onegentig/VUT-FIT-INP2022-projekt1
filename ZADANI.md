@@ -4,6 +4,7 @@
   - [Činnost procesoru bfISA](#činnost-procesoru-bfisa)
     - [Mikrokontrolér](#mikrokontrolér)
     - [Doplňující teorie](#doplňující-teorie)
+      - [Pseudokódy](#pseudokódy)
   - [Testovací prostředí](#testovací-prostředí)
     - [Spuštění testovacího prostředí](#spuštění-testovacího-prostředí)
   - [Úkoly](#úkoly)
@@ -68,8 +69,10 @@ Všechny řídící signály jsou ovládány automatem, tak jak je uvedeno ve sc
 
 Nevíte-li jak implementovat automat pomocí VHDL, podívejte se do materiálů k cvičením INP. Jako návod pro implementaci by měl posloužit pseudokód v tabulce výše. Máte-li s implementací potíže, vytvořte jednodušší verzi automatú, který nepodporuje vnořené smyčky.
 
+#### Pseudokódy
+
 <details>
-<summary>Pseudokódy</summary>
+<summary>Zobrazit...</summary>
 
 **Výchozí stav**
 
@@ -170,6 +173,8 @@ PC <- PC
 ```
 
 *( ( a ) nutné vymyslet, inspirace viz. [ a ] )*
+
+Konec sekce pseudokódy - [skok spět](#pseudokódy)
 
 -----
 
