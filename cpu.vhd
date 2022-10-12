@@ -39,6 +39,31 @@ END cpu;
 --                      Architecture declaration
 -- ----------------------------------------------------------------------------
 ARCHITECTURE behavioral OF cpu IS
+  -- PC (program counter)
+  SIGNAL PC         : STD_LOGIC_VECTOR(12 DOWNTO 0);
+  SIGNAL PC_INC     : STD_LOGIC;
+  SIGNAL PC_DEC     : STD_LOGIC;
+  -- PTR (pointer to data in memory)
+  SIGNAL PTR        : STD_LOGIC_VECTOR(12 DOWNTO 0);
+  SIGNAL PTR_INC    : STD_LOGIC;
+  SIGNAL PTR_DEC    : STD_LOGIC;
+  -- CNT (counter for loops)
+  SIGNAL CNT        : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  SIGNAL CNT_ONE    : STD_LOGIC;
+  SIGNAL CNT_INC    : STD_LOGIC;
+  SIGNAL CNT_DEC    : STD_LOGIC;
+  -- Helper signals
+  SIGNAL MX1_sel    : STD_LOGIC;
+  SIGNAL MX2_sel    : STD_LOGIC;
+  SIGNAL RDATA_ZERO : STD_LOGIC;
+  -- IREG (instruction register) and instruction decoder
+  TYPE t_instr IS (halt, inc, dec, ptr_inc, ptr_dec, output, input, wloop_begin, wloop_end, dloop_begin, dloop_end);
+  SIGNAL IREG     : STD_LOGIC_VECTOR(15 DOWNTO 0);
+  SIGNAL IREG_DEC : t_instr;
+  -- FSM (finite state machine)
+  TYPE t_state IS (start, fetch, decode, ex_inc, ex_dec, ex_ptr_inc, ex_ptr_dec, ex_output, ex_input, ex_wloop_begin, ex_wloop_end, ex_dloop_begin, ex_dloop_end, halt);
+  SIGNAL PSTATE : t_state;
+  SIGNAL NSTATE : t_state;
 BEGIN
 
 END behavioral;
