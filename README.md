@@ -13,5 +13,14 @@ Zadání: ??
 - [X] `login.b` program na výpis loginu
 - [X] Spojeznit *fitkit-build*
 - [ ] Nějáké kouzlo, WTF je tenhle projekt??? :panik:
+  - [ ] test cpu.test_reset
+  - [ ] test cpu.test_increment
+  - [ ] test cpu.test_decrement
+  - [ ] test cpu.test_move
+  - [ ] test cpu.test_print
+  - [ ] test cpu.test_input
+  - [ ] test cpu.test_while_loop
+  - [ ] test cpu.test_do_loop
+  - [ ] test cpu.test_login
 - [ ] ⏰ Deadline 13.11.
 - [ ] ⏰ Hodnocení
