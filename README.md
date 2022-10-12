@@ -11,7 +11,7 @@ Zadání: ??
 ### TODO List
 
 - [X] `login.b` program na výpis loginu
-- [ ] Spojeznit *fitkit-build*
+- [X] Spojeznit *fitkit-build*
 - [ ] Nějáké kouzlo, WTF je tenhle projekt??? :panik:
 - [ ] ⏰ Deadline 13.11.
 - [ ] ⏰ Hodnocení
