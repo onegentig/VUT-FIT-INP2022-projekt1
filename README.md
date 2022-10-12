@@ -12,15 +12,29 @@ Zadání: ??
 
 - [X] `login.b` program na výpis loginu
 - [X] Spojeznit *fitkit-build*
-- [ ] Nějáké kouzlo, WTF je tenhle projekt??? :panik:
-  - [ ] test cpu.test_reset
-  - [ ] test cpu.test_increment
-  - [ ] test cpu.test_decrement
-  - [ ] test cpu.test_move
-  - [ ] test cpu.test_print
-  - [ ] test cpu.test_input
-  - [ ] test cpu.test_while_loop
-  - [ ] test cpu.test_do_loop
-  - [ ] test cpu.test_login
+- [ ] Nějáké kouzlo s `cpu.vhd`
+  - [ ] PC, PTR, CNT
+  - [ ] FSM, IREG, IREG_DEC
+  - [ ] instruction noop
+  - [ ] instruction 0x00 – null
+    - [ ] test cpu.test_reset
+  - [ ] instruction 0x2B – +
+    - [ ] test cpu.test_increment
+  - [ ] instruction 0x2D – -
+    - [ ] test cpu.test_decrement
+  - [ ] instruction 0x3C – <
+  - [ ] instruction 0x3E – >
+    - [ ] test cpu.test_move
+  - [ ] instruction 0x2E – .
+    - [ ] test cpu.test_print
+  - [ ] instruction 0x2C – ,
+    - [ ] test cpu.test_input
+  - [ ] instruction 0x5B – [
+  - [ ] instruction 0x5D – ]
+    - [ ] test cpu.test_while_loop
+  - [ ] instruction 0x28 – ()
+  - [ ] instruction 0x29 – )
+    - [ ] test cpu.test_do_loop
+  - [ ] (final boss) test cpu.test_login
 - [ ] ⏰ Deadline 13.11.
 - [ ] ⏰ Hodnocení
