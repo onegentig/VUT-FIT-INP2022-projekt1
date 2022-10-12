@@ -1,5 +1,15 @@
 # INP — Projekt 1 : Procesor s jednoduchou inštrukční sadou
 
+- [INP — Projekt 1 : Procesor s jednoduchou inštrukční sadou](#inp--projekt-1--procesor-s-jednoduchou-inštrukční-sadou)
+  - [Činnost procesoru bfISA](#činnost-procesoru-bfisa)
+    - [Mikrokontrolér](#mikrokontrolér)
+    - [Doplňující teorie](#doplňující-teorie)
+  - [Testovací prostředí](#testovací-prostředí)
+    - [Spuštění testovacího prostředí](#spuštění-testovacího-prostředí)
+  - [Úkoly](#úkoly)
+  - [Odevzdání](#odevzdání)
+    - [Hodnocení](#hodnocení)
+
 *(originál: [MOODLE](https://moodle.vut.cz/pluginfile.php/508722/mod_resource/content/1/project1.pdf))*
 
 > **Datum zadání:** *10.10.2022*
@@ -12,7 +22,7 @@
 
 Cílem tohoto projektu je implementovat pomocí VHDL **procesor**, který bude schopen vykonávat program napsaný v supersetu ezoterického jazyka [**Brainfuck**](https://esolangs.org/wiki/Brainfuck) - jedná se o výpočetně úplnou sadu ačkoliv používa pouze osm příkazů.
 
-## Rozšířený Brainfuck a činnost procesoru
+## Činnost procesoru bfISA
 
 Jazyk používá příkazy kódované pomocí 8-bitových znaků, které bude procesor zpracovávat přímo. Program pro tento procesor bude sestávat ze sekvence desíti příkazú rozšířené verzi jazyku Brainfuck (založeno na Brainlove):
 
@@ -43,6 +53,127 @@ Procesor je nutné doplnit o paměť programu a dat o celkové kapacitě 8 kB a 
 * Výstup řešte pomocí LCD displeje, kam se postupně vypisujú znaky. Posun kurzoru na displeji by byl řešen automaticky.
 
 Pro usnadnění vývoje máte připraveno prostředí emulujíci výše uvedené periférie a sadu základních testů.
+
+### Doplňující teorie
+
+*(určeno těm, kteří doposud netuší jak procesor naimplementovat)*
+
+![Obr.2: Blokové schéma mikrokontroleru](https://i.imgur.com/7voHnQ1.png)
+
+Obecně platí, že procesor se skládá z datové cesty (obsahující registry), ALU apod. a řídící cesty obsahující **automat** (*FSM* - *finite state machine*).
+
+Abychom mohli vykonávat program, obsahuje datová cesta tři registry (čítače) s možností inkrementace a dekrementace. Registr PC slouží jako programový čítač (t.j. ukazatel do paměti programu), registr PTR jako ukazatel do paměti dat a registr CNT slouží ke korektnímu určení odpovídajícího začátku/konce cyklů (while a do-while), a to počítáním otevíracích / uzavíracích závorek, viz. popis instrukční sady. Mimo to datová cesta obsahuje multiplexor MX1, pomocí kretého lze během čtení z paměti definovat, zda-li se jedná o adresu programu nebo adresu dat; multiplexor MX2, který určuje hodnotu zapisovanou do paměti. Zapsat je možné buď hodnotu načtenou ze vstupu, hodnotu v aktuální bunce sníženou o 1, hodnotu aktuální buňky zvýšenou o 1 nebo hodnotu získanou při posledním čtení z paměti. V případě, že se rozhodnete neimplementovat podporu vnořených while cyklů, můžete registr CNT ignorovat.
+
+Všechny řídící signály jsou ovládány automatem, tak jak je uvedeno ve schématu. V prvním kroku implementujte registry (konstrukce process) a multiplexory (dataflow popis), poté postupujte od jednodušších instrukcí ke složitejším. Implementaci smyček si ponechte až na závěr; korektní činnost ověřte pomocí simulace a přiložených či vlastních testů.
+
+Nevíte-li jak implementovat automat pomocí VHDL, podívejte se do materiálů k cvičením INP. Jako návod pro implementaci by měl posloužit pseudokód v tabulce výše. Máte-li s implementací potíže, vytvořte jednodušší verzi automatú, který nepodporuje vnořené smyčky.
+
+<details>
+<summary>Pseudokódy</summary>
+
+**Výchozí stav**
+
+```crystal
+PC <- 0
+PTR <- 0x1000
+CNT <- 0
+TMP <- 0x1000
+```
+
+**>**
+
+```crystal
+PTR <- 0x1000 + (PTR + 1) % 0x1000
+PC <- PC + 1
+```
+
+**<**
+
+```crystal
+PTR <- 0x1000 + (PTR - 1) % 0x1000
+PC <- PC + 1
+```
+
+**+**
+
+```crystal
+DATA_RDATA <- MEM[PTR]
+MEM[PTR] <- DATA_RDATA + 1
+PC <- PC + 1
+```
+
+**-**
+
+```crystal
+DATA_RDATA <- MEM[PTR]
+MEM[PTR] <- DATA_RDATA - 1
+PC <- PC + 1
+```
+
+**.**
+
+```crystal
+while (OUT_BUSY) {}
+OUT_DATA <- MEM[PTR]
+PC <- PC + 1
+```
+
+**,**
+
+```crystal
+IN_REQ <- 1
+while (!IN_VLD) {}
+MEM[PTR] <- IN_DATA
+PC <- PC + 1
+```
+
+**[**
+
+```crystal
+PC <- PC + 1
+if (MEM[PTR] == 0)
+    CNT <- 1
+    while (CNT != 0)
+        c <- MEM[PC]
+        if (c == '[')
+            CNT <- CNT + 1
+        elsif (c == ']')
+            CNT <- CNT - 1
+        PC <- PC + 1
+```
+
+**]**
+
+```crystal
+if (MEM[PTR] == 0)
+    PC <- PC + 1
+else {
+    CNT <- 1
+    PC <- PC - 1
+    while (CNT != 0)
+        c <- MEM[PC]
+        if (c == ']')
+            CNT <- CNT + 1
+        elsif (c == '[')
+            CNT <- CNT - 1
+
+        if (CNT == 0)
+            PC <- PC + 1
+        else
+            PC <- PC - 1
+```
+
+**null**
+
+```crystal
+PC <- PC
+```
+
+*( ( a ) nutné vymyslet, inspirace viz. [ a ] )*
+
+-----
+
+</details>
 
 ## Testovací prostředí
 
