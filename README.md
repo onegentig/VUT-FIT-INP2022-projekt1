@@ -18,10 +18,10 @@ Zadání: ??
   - [X] PC, PTR, CNT, MX
   - [ ] FSM
     - [X] model
-    - [ ] implementation base
+    - [X] implementation base
+    - [X] test cpu.test_reset
   - [ ] instruction noop
   - [ ] instruction 0x00 – null
-    - [ ] test cpu.test_reset
   - [ ] instruction 0x2B – +
     - [ ] test cpu.test_increment
   - [ ] instruction 0x2D – -

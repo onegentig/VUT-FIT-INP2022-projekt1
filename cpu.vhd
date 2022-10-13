@@ -153,5 +153,24 @@ BEGIN
   END PROCESS;
 
   -- Next state logic; output logic
-  -- TODO: FSM_NSTATE 
+  FSM_NSTATE : PROCESS (PSTATE, IN_VLD, OUT_BUSY, DATA_RDATA, CNT_ZERO, EN)
+  BEGIN
+    -- Initial state
+    DATA_EN   <= '0';
+    DATA_RDWR <= '0';
+
+    IN_REQ    <= '0';
+    OUT_WE    <= '0';
+    OUT_DATA  <= "00000000";
+
+    PC_INC    <= '0';
+    PC_DEC    <= '0';
+    PTR_INC   <= '0';
+    PTR_DEC   <= '0';
+    CNT_INC   <= '0';
+    CNT_DEC   <= '0';
+
+    MX1_SEL   <= '0';
+    MX2_SEL   <= "00";
+  END PROCESS;
 END behavioral;
