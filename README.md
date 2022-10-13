@@ -16,7 +16,7 @@ Zadání: ??
 - [x] Spojeznit _fitkit-build_
 - [ ] Nějáké kouzlo s `cpu.vhd`
   - [X] PC, PTR, CNT
-  - [ ] fsm
+  - [ ] FSM
     - [X] model
     - [ ] implementation base
   - [ ] instruction noop

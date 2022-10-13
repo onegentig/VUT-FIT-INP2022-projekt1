@@ -7,8 +7,8 @@ digraph G {
   edge [fontname = "Handlee", fontcolor = "white", color = "white"];
 
   idle [shape = "Mcircle"];
-  fetch [fontcolor = "blue"]
-  decode [fontcolor = "blue"]
+  fetch [fontcolor = "lightblue"]
+  decode [fontcolor = "lightblue"]
   idle -> fetch [label = "EN=1"]
   fetch -> decode
   fetch -> idle [label = "EN=0"]
