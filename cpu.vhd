@@ -56,7 +56,7 @@ ARCHITECTURE behavioral OF cpu IS
   SIGNAL MX2_SEL  : STD_LOGIC_VECTOR(1 DOWNTO 0);
   SIGNAL CNT_ZERO : STD_LOGIC;
   -- FSM (finite state machine)
-  TYPE t_state IS (idle, fetch, decode, ex_ptr_inc, ex_ptr_dec, ex_val_inc, ex_val_dec, ex_print, ex_read, ex_wloop_beg, ex_wloop_end, ex_dloop_beg, ex_dloop_end, ex_noop, halt);
+  TYPE t_state IS (idle, fetch, decode, ex_lmov, ex_rmov, ex_inc, ex_dec, ex_print, ex_read, ex_whilebeg, ex_whileend, ex_dobeg, ex_doend, ex_noop, halt);
   SIGNAL PSTATE                    : t_state := idle;
   SIGNAL NSTATE                    : t_state;
   ATTRIBUTE fsm_encoding           : STRING;
@@ -105,7 +105,7 @@ BEGIN
       END IF;
     END IF;
   END PROCESS;
-  -- CNT_ZERO (log.1 if CNT == 0, else log.0)
+  -- CNT_ZERO (CNT ?= 0 comparator)
   PROCESS_CNTZERO : PROCESS (CNT, RESET, CLK)
   BEGIN
     IF (RESET = '1') THEN

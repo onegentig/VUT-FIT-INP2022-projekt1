@@ -16,31 +16,31 @@ digraph G {
   fetch -> idle [label = "EN=0"];
   
   halt [fontcolor = "red", shape = "doublecircle"];
-  decode -> halt [label = "\\0", constraint = "false"];
+  decode -> halt [label = "\\0", constraint = "true"];
   halt -> halt
-  decode -> ex_ptr_inc [label = ">", constraint = "false"];
-  decode -> ex_ptr_dec [label = "<", constraint = "false"];
-  decode -> ex_val_inc [label = "+", constraint = "false"];
-  decode -> ex_val_dec [label = "-", constraint = "false"];
-  decode -> ex_print [label = ".", constraint = "false"];
-  decode -> ex_read [label = ",", constraint = "false"];
-  decode -> ex_wloop_beg [label = "[", constraint = "false"];
-  decode -> ex_wloop_end [label = "]", constraint = "false"];
-  decode -> ex_dloop_beg [label = "(", constraint = "false"];
-  decode -> ex_dloop_end [label = ")", constraint = "false"];
-  decode -> ex_noop [label = "", constraint = "false"];
+  decode -> ex_lmov[label = ">", constraint = "true"];
+  decode -> ex_rmov[label = "<", constraint = "true"];
+  decode -> ex_inc [label = "+", constraint = "true"];
+  decode -> ex_dec [label = "-", constraint = "true"];
+  decode -> ex_print [label = ".", constraint = "true"];
+  decode -> ex_read [label = ",", constraint = "true"];
+  decode -> ex_whilebeg [label = "[", constraint = "true"];
+  decode -> ex_whileend [label = "]", constraint = "true"];
+  decode -> ex_dobeg [label = "(", constraint = "true"];
+  decode -> ex_doend [label = ")", constraint = "true"];
+  decode -> ex_noop [label = "", constraint = "true"];
   
   subgraph cluster_execution {
-    ex_ptr_inc,
-    ex_ptr_dec,
-    ex_val_inc,
-    ex_val_dec,
+    ex_lmov,
+    ex_rmov,
+    ex_inc,
+    ex_dec,
     ex_print,
     ex_read,
-    ex_wloop_beg,
-    ex_wloop_end,
-    ex_dloop_beg,
-    ex_dloop_end,
+    ex_whilebeg,
+    ex_whileend,
+    ex_dobeg,
+    ex_doend,
     ex_noop
   };
   
