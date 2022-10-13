@@ -1,7 +1,7 @@
 digraph G {
   rankdir = "LR";
   compound = "true";
-  bgcolor = "black";
+  bgcolor = "transparent";
   graph [fontname = "Handlee", fontcolor = "white", color = "white"];
   node [fontname = "Handlee", fontcolor = "white", color = "white"];
   edge [fontname = "Handlee", fontcolor = "white", color = "white"];
