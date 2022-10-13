@@ -1,8 +1,10 @@
 # INP PROJEKT 1, FIT VUT 2022
 
-*První projekt (procesor s Brainfuck-like ISA) z předmětu Návrh počítačových systémů (INP), třetí semestr bakalářského studia BIT na FIT VUT/BUT, ak.rok 2022/2023*
+_První projekt (procesor s Brainfuck-like ISA) z předmětu Návrh počítačových systémů (INP), třetí semestr bakalářského studia BIT na FIT VUT/BUT, ak.rok 2022/2023_
 
 🔒 **Aktivní soukromý repozitář — nezveřejňovat!**
+
+<img align="right" width="33%" src='https://sketchviz.com/@Onegenimasu/d427531c9d97a9dbc5894b9d81472712/470347528d7f5c89de48fc7ce996af4e04ddc944.sketchy.png' />
 
 Hodnocení: ?? / ??<br>(??)
 
@@ -10,8 +12,8 @@ Zadání: ??
 
 ### TODO List
 
-- [X] `login.b` program na výpis loginu
-- [X] Spojeznit *fitkit-build*
+- [x] `login.b` program na výpis loginu
+- [x] Spojeznit _fitkit-build_
 - [ ] Nějáké kouzlo s `cpu.vhd`
   - [ ] PC, PTR, CNT
   - [ ] FSM, IREG, IREG_DEC
