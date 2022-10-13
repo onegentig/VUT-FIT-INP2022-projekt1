@@ -111,7 +111,7 @@ BEGIN
     IF (RESET = '1') THEN
       CNT_ZERO <= '1';
     ELSIF (rising_edge(CLK)) THEN
-      IF (CNT = (OTHERS => '0')) THEN
+      IF (CNT = "00000000") THEN
         CNT_ZERO <= '1';
       ELSE
         CNT_ZERO <= '0';
