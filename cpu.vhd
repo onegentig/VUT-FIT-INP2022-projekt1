@@ -111,10 +111,11 @@ BEGIN
     IF (RESET = '1') THEN
       CNT_ZERO <= '1';
     ELSIF (rising_edge(CLK)) THEN
-      CASE (CNT = (OTHERS => '0'))
-        WHEN TRUE           => CNT_ZERO   <= '1';
-        WHEN OTHERS         => CNT_ZERO <= '0';
-      END CASE;
+      IF (CNT = (OTHERS => '0')) THEN
+        CNT_ZERO <= '1';
+      ELSE
+        CNT_ZERO <= '0';
+      END IF;
     END IF;
   END PROCESS;
 
