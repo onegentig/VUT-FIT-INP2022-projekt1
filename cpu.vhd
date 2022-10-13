@@ -111,7 +111,7 @@ BEGIN
     IF (RESET = '1') THEN
       CNT_ZERO <= '1';
     ELSIF (rising_edge(CLK)) THEN
-      IF (CNT = "00000000") THEN
+      IF (CNT = X"00") THEN
         CNT_ZERO <= '1';
       ELSE
         CNT_ZERO <= '0';
@@ -161,7 +161,7 @@ BEGIN
 
     IN_REQ    <= '0';
     OUT_WE    <= '0';
-    OUT_DATA  <= "00000000";
+    OUT_DATA  <= X"00";
 
     PC_INC    <= '0';
     PC_DEC    <= '0';
