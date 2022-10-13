@@ -4,7 +4,7 @@ _První projekt (procesor s Brainfuck-like ISA) z předmětu Návrh počítačov
 
 🔒 **Aktivní soukromý repozitář — nezveřejňovat!**
 
-<img align="right" width="33%" src='https://sketchviz.com/@Onegenimasu/d427531c9d97a9dbc5894b9d81472712/470347528d7f5c89de48fc7ce996af4e04ddc944.sketchy.png' />
+<img align="right" width="33%" src='https://github.com/Onegenimasu/VUT-FIT-INP2022-projekt1/raw/main/fsm.png' />
 
 Hodnocení: ?? / ??<br>(??)
 
@@ -15,8 +15,10 @@ Zadání: ??
 - [x] `login.b` program na výpis loginu
 - [x] Spojeznit _fitkit-build_
 - [ ] Nějáké kouzlo s `cpu.vhd`
-  - [ ] PC, PTR, CNT
-  - [ ] FSM, IREG, IREG_DEC
+  - [X] PC, PTR, CNT
+  - [ ] fsm
+    - [X] model
+    - [ ] implementation base
   - [ ] instruction noop
   - [ ] instruction 0x00 – null
     - [ ] test cpu.test_reset
