@@ -15,7 +15,7 @@ Zadání: ??
 - [x] `login.b` program na výpis loginu
 - [x] Spojeznit _fitkit-build_
 - [ ] Nějáké kouzlo s `cpu.vhd`
-  - [X] PC, PTR, CNT
+  - [X] PC, PTR, CNT, MX
   - [ ] FSM
     - [X] model
     - [ ] implementation base

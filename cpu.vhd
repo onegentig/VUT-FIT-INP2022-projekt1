@@ -40,26 +40,28 @@ END cpu;
 -- ----------------------------------------------------------------------------
 ARCHITECTURE behavioral OF cpu IS
   -- PC (program counter)
-  SIGNAL PC         : STD_LOGIC_VECTOR(12 DOWNTO 0);
-  SIGNAL PC_INC     : STD_LOGIC;
-  SIGNAL PC_DEC     : STD_LOGIC;
+  SIGNAL PC       : STD_LOGIC_VECTOR(12 DOWNTO 0);
+  SIGNAL PC_INC   : STD_LOGIC;
+  SIGNAL PC_DEC   : STD_LOGIC;
   -- PTR (pointer to data in memory)
-  SIGNAL PTR        : STD_LOGIC_VECTOR(12 DOWNTO 0);
-  SIGNAL PTR_INC    : STD_LOGIC;
-  SIGNAL PTR_DEC    : STD_LOGIC;
+  SIGNAL PTR      : STD_LOGIC_VECTOR(12 DOWNTO 0);
+  SIGNAL PTR_INC  : STD_LOGIC;
+  SIGNAL PTR_DEC  : STD_LOGIC;
   -- CNT (counter for loops)
-  SIGNAL CNT        : STD_LOGIC_VECTOR(7 DOWNTO 0);
-  SIGNAL CNT_INC    : STD_LOGIC;
-  SIGNAL CNT_DEC    : STD_LOGIC;
+  SIGNAL CNT      : STD_LOGIC_VECTOR(7 DOWNTO 0);
+  SIGNAL CNT_INC  : STD_LOGIC;
+  SIGNAL CNT_DEC  : STD_LOGIC;
   -- Helper signals
-  SIGNAL MX1_SEL    : STD_LOGIC;
-  SIGNAL MX2_SEL    : STD_LOGIC_VECTOR(1 DOWNTO 0);
-  SIGNAL CNT_ZERO   : STD_LOGIC;
-  SIGNAL RDATA_ZERO : STD_LOGIC;
+  SIGNAL MX1_SEL  : STD_LOGIC;
+  SIGNAL MX2_SEL  : STD_LOGIC_VECTOR(1 DOWNTO 0);
+  SIGNAL CNT_ZERO : STD_LOGIC;
   -- FSM (finite state machine)
   TYPE t_state IS (idle, fetch, decode, ex_ptr_inc, ex_ptr_dec, ex_val_inc, ex_val_dec, ex_print, ex_read, ex_wloop_beg, ex_wloop_end, ex_dloop_beg, ex_dloop_end, ex_noop, halt);
-  SIGNAL PSTATE : t_state;
-  SIGNAL NSTATE : t_state;
+  SIGNAL PSTATE                    : t_state := idle;
+  SIGNAL NSTATE                    : t_state;
+  ATTRIBUTE fsm_encoding           : STRING;
+  ATTRIBUTE fsm_encoding OF PSTATE : SIGNAL IS "sequential";
+  ATTRIBUTE fsm_encoding OF NSTATE : SIGNAL IS "sequential";
 BEGIN
   -- PC (program counter)
   pc : PROCESS (PC_INC, PC_DEC, RESET, CLK)
@@ -137,4 +139,18 @@ BEGIN
       WHEN OTHERS => NULL;
     END CASE;
   END PROCESS;
+
+  -- FINITE STATE MACHINE
+  -- Present state logic
+  pstate : PROCESS (PSTATE, RESET, CLK)
+  BEGIN
+    IF (RESET = '1') THEN
+      PSTATE <= idle;
+    ELSIF (rising_edge(CLK)) THEN
+      PSTATE <= NSTATE;
+    END IF;
+  END PROCESS;
+
+  -- Next state logic; output logic
+  -- todo
 END behavioral;
