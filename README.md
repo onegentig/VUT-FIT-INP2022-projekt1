@@ -4,7 +4,7 @@ _První projekt (procesor s Brainfuck-like ISA) z předmětu Návrh počítačov
 
 🔒 **Aktivní soukromý repozitář — nezveřejňovat!**
 
-<img align="right" width="33%" src='https://github.com/Onegenimasu/VUT-FIT-INP2022-projekt1/raw/main/fsm.png' />
+<img align="right" width="55%" src='https://github.com/Onegenimasu/VUT-FIT-INP2022-projekt1/raw/main/fsm.png' />
 
 Hodnocení: ?? / ??<br>(??)
 

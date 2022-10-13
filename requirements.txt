@@ -1,3 +1,0 @@
-cocotb==1.7.1
-makefun==1.15.0
-pytest
