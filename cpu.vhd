@@ -64,7 +64,7 @@ ARCHITECTURE behavioral OF cpu IS
   ATTRIBUTE fsm_encoding OF NSTATE : SIGNAL IS "sequential";
 BEGIN
   -- PC (program counter)
-  pc : PROCESS (PC_INC, PC_DEC, RESET, CLK)
+  PROCESS_PC : PROCESS (PC_INC, PC_DEC, RESET, CLK)
   BEGIN
     IF (RESET = '1') THEN
       PC <= (OTHERS => '0');
@@ -78,7 +78,7 @@ BEGIN
   END PROCESS;
 
   -- PTR (pointer to data in memory)
-  ptr : PROCESS (PTR_INC, PTR_DEC, RESET, CLK)
+  PROCESS_PTR : PROCESS (PTR_INC, PTR_DEC, RESET, CLK)
   BEGIN
     IF (RESET = '1') THEN
       PTR <= (OTHERS => '0');
@@ -92,7 +92,7 @@ BEGIN
   END PROCESS;
 
   -- CNT (counter for loops)
-  cnt : PROCESS (CNT_INC, CNT_DEC, RESET, CLK)
+  PROCESS_CNT : PROCESS (CNT_INC, CNT_DEC, RESET, CLK)
   BEGIN
     IF (RESET = '1') THEN
       CNT      <= (OTHERS => '0');
@@ -106,7 +106,7 @@ BEGIN
     END IF;
   END PROCESS;
   -- CNT_ZERO (log.1 if CNT == 0, else log.0)
-  cnt_zero : PROCESS (CNT, RESET, CLK)
+  PROCESS_CNTZERO : PROCESS (CNT, RESET, CLK)
   BEGIN
     IF (RESET = '1') THEN
       CNT_ZERO <= '1';
@@ -120,7 +120,7 @@ BEGIN
   END PROCESS;
 
   -- MX1 (program or data address in memory)
-  mx1 : PROCESS (PC, PTR, MX1_SEL)
+  MX1 : PROCESS (PC, PTR, MX1_SEL)
   BEGIN
     CASE MX1_SEL IS
       WHEN '0'    => DATA_ADDR <= PC;
@@ -130,7 +130,7 @@ BEGIN
   END PROCESS;
 
   -- MX2 (value to write to memory)
-  mx2 : PROCESS (IN_DATA, DATA_RDATA, MX2_SEL)
+  MX2 : PROCESS (IN_DATA, DATA_RDATA, MX2_SEL)
   BEGIN
     CASE MX2_SEL IS
       WHEN "00"   => DATA_WDATA <= IN_DATA;
@@ -143,7 +143,7 @@ BEGIN
 
   -- FINITE STATE MACHINE
   -- Present state logic
-  pstate : PROCESS (PSTATE, RESET, CLK)
+  FSM_PSTATE : PROCESS (PSTATE, RESET, CLK)
   BEGIN
     IF (RESET = '1') THEN
       PSTATE <= idle;
@@ -153,5 +153,5 @@ BEGIN
   END PROCESS;
 
   -- Next state logic; output logic
-  -- todo
+  -- TODO: FSM_NSTATE 
 END behavioral;
