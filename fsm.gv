@@ -1,0 +1,47 @@
+digraph G {
+  graph [fontname = "Handlee"];
+  node [fontname = "Handlee"];
+  edge [fontname = "Handlee"];
+  
+  rankdir=LR;
+  compound=true;
+  bgcolor=grey;
+  idle [shape=Mcircle];
+  
+  fetch [fontcolor="blue"]
+  decode [fontcolor="blue"]
+  idle -> fetch [label="EN=1"]
+  fetch -> decode
+  fetch -> idle [label="EN=0"]
+  
+  halt [fontcolor="red",shape=doublecircle]
+  decode -> halt [label="\\0",constraint=false]
+  halt -> halt
+  decode -> ex_ptr_inc [label=">",constraint=false]
+  decode -> ex_ptr_dec [label="<",constraint=false]
+  decode -> ex_val_inc [label="+",constraint=false]
+  decode -> ex_val_dec [label="-",constraint=false]
+  decode -> ex_print [label=".",constraint=false]
+  decode -> ex_read [label=",",constraint=false]
+  decode -> ex_wloop_beg [label="[",constraint=false]
+  decode -> ex_wloop_end [label="]",constraint=false]
+  decode -> ex_dloop_beg [label="(",constraint=false]
+  decode -> ex_dloop_end [label=")",constraint=false]
+  decode -> ex_noop [label="",constraint=false]
+  
+  subgraph cluster_execution {
+    ex_ptr_inc,
+    ex_ptr_dec,
+    ex_val_inc,
+    ex_val_dec,
+    ex_print,
+    ex_read,
+    ex_wloop_beg,
+    ex_wloop_end,
+    ex_dloop_beg,
+    ex_dloop_end,
+    ex_noop
+  }
+  
+  ex_noop -> fetch [ltail=cluster_execution]
+}
