@@ -64,7 +64,7 @@ ARCHITECTURE behavioral OF cpu IS
   ATTRIBUTE fsm_encoding OF NSTATE : SIGNAL IS "sequential";
 BEGIN
   -- PC (program counter)
-  PROCESS_PC : PROCESS (PC_INC, PC_DEC, RESET, CLK)
+  PROCESS_PC : PROCESS (CLK, RESET)
   BEGIN
     IF (RESET = '1') THEN
       PC <= (OTHERS => '0');
@@ -78,7 +78,7 @@ BEGIN
   END PROCESS;
 
   -- PTR (pointer to data in memory)
-  PROCESS_PTR : PROCESS (PTR_INC, PTR_DEC, RESET, CLK)
+  PROCESS_PTR : PROCESS (CLK, RESET)
   BEGIN
     IF (RESET = '1') THEN
       PTR <= (OTHERS => '0');
@@ -92,11 +92,10 @@ BEGIN
   END PROCESS;
 
   -- CNT (counter for loops)
-  PROCESS_CNT : PROCESS (CNT_INC, CNT_DEC, RESET, CLK)
+  PROCESS_CNT : PROCESS (CLK, RESET)
   BEGIN
     IF (RESET = '1') THEN
-      CNT      <= (OTHERS => '0');
-      CNT_ZERO <= '1';
+      CNT <= (OTHERS => '0');
     ELSIF (rising_edge(CLK)) THEN
       IF (CNT_INC = '1') THEN
         CNT <= CNT + 1;
@@ -106,7 +105,7 @@ BEGIN
     END IF;
   END PROCESS;
   -- CNT_ZERO (CNT ?= 0 comparator)
-  PROCESS_CNTZERO : PROCESS (CNT, RESET, CLK)
+  PROCESS_CNTZERO : PROCESS (CLK, RESET)
   BEGIN
     IF (RESET = '1') THEN
       CNT_ZERO <= '1';
@@ -143,7 +142,7 @@ BEGIN
 
   -- FINITE STATE MACHINE
   -- Present state logic
-  FSM_PSTATE : PROCESS (PSTATE, RESET, CLK)
+  FSM_PSTATE : PROCESS (CLK, RESET)
   BEGIN
     IF (RESET = '1') THEN
       PSTATE <= idle;
