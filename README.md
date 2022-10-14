@@ -29,8 +29,8 @@ Zadání: ??
   - [X] instruction 0x3C – <
   - [X] instruction 0x3E – >
     - [X] test cpu.test_move
-  - [ ] instruction 0x2E – .
-    - [ ] test cpu.test_print
+  - [X] instruction 0x2E – .
+    - [X] test cpu.test_print
   - [ ] instruction 0x2C – ,
     - [ ] test cpu.test_input
   - [ ] instruction 0x5B – [

@@ -56,7 +56,15 @@ ARCHITECTURE behavioral OF cpu IS
   SIGNAL MX2_SEL  : STD_LOGIC_VECTOR(1 DOWNTO 0);
   SIGNAL CNT_ZERO : STD_LOGIC;
   -- FSM (finite state machine)
-  TYPE t_state IS (idle, fetch, decode, ex_inc_r, ex_inc_w, ex_dec_r, ex_dec_w, ex_lmov, ex_rmov, ex_print, ex_read, ex_whilebeg, ex_whileend, ex_dobeg, ex_doend, ex_noop, halt);
+  TYPE t_state IS (idle, fetch, decode,
+    ex_inc_r, ex_inc_w,
+    ex_dec_r, ex_dec_w,
+    ex_lmov, ex_rmov,
+    ex_print_r, ex_print_out,
+    ex_read,
+    ex_whilebeg, ex_whileend,
+    ex_dobeg, ex_doend,
+    ex_noop, halt);
   SIGNAL PSTATE                    : t_state := idle;
   SIGNAL NSTATE                    : t_state;
   ATTRIBUTE fsm_encoding           : STRING;
@@ -197,7 +205,7 @@ BEGIN
           WHEN X"2D"  => NSTATE  <= ex_dec_r;
           WHEN X"3E"  => NSTATE  <= ex_lmov;
           WHEN X"3C"  => NSTATE  <= ex_rmov;
-          WHEN X"2E"  => NSTATE  <= ex_print;
+          WHEN X"2E"  => NSTATE  <= ex_print_r;
           WHEN X"2C"  => NSTATE  <= ex_read;
           WHEN X"5B"  => NSTATE  <= ex_whilebeg;
           WHEN X"5D"  => NSTATE  <= ex_whileend;
@@ -257,6 +265,24 @@ BEGIN
         PC_INC  <= '1'; -- increment program counter
         PTR_DEC <= '1'; -- decrement pointer
         NSTATE  <= fetch;
+
+        -- PRINT (Print value)
+        -- tact 1 - read value from memory
+      WHEN ex_print_r =>
+        PC_INC    <= '1'; -- increment program counter
+        MX1_SEL   <= '1'; -- data memory
+        DATA_RDWR <= '0'; -- read memory
+        DATA_EN   <= '1'; -- enable memory
+        NSTATE    <= ex_print_out;
+        -- tact 2 - output value
+      WHEN ex_print_out =>
+        IF (OUT_BUSY = '1') THEN
+          NSTATE <= ex_print_out;
+        ELSE
+          OUT_WE   <= '1';        -- enable output
+          OUT_DATA <= DATA_RDATA; -- output value
+          NSTATE   <= fetch;
+        END IF;
 
         -- (fallthrough, this should not happen)
       WHEN OTHERS =>
