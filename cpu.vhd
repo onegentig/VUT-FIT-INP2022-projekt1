@@ -158,19 +158,66 @@ BEGIN
     -- Initial state
     DATA_EN   <= '0';
     DATA_RDWR <= '0';
-
     IN_REQ    <= '0';
     OUT_WE    <= '0';
     OUT_DATA  <= X"00";
-
     PC_INC    <= '0';
     PC_DEC    <= '0';
     PTR_INC   <= '0';
     PTR_DEC   <= '0';
     CNT_INC   <= '0';
     CNT_DEC   <= '0';
-
     MX1_SEL   <= '0';
     MX2_SEL   <= "00";
+
+    CASE PSTATE IS
+        -- IDLE (initial processor state)
+      WHEN idle =>
+        IF (EN = '1') THEN
+          NSTATE <= fetch;
+        ELSE
+          NSTATE <= idle;
+        END IF;
+
+        -- FETCH (fetch instruction from memory)
+      WHEN fetch =>
+        IF (EN = '1') THEN
+          NSTATE    <= decode;
+          MX1_SEL   <= '0'; -- program memory
+          DATA_RDWR <= '1'; -- read from memory
+          DATA_EN   <= '1'; -- enable memory
+        ELSE
+          NSTATE <= idle;
+        END IF;
+
+        -- DECODE (decode instruction)
+      WHEN decode =>
+        CASE DATA_RDATA IS
+          WHEN X"00"  => NSTATE  <= halt;
+          WHEN X"3E"  => NSTATE  <= ex_lmov;
+          WHEN X"3C"  => NSTATE  <= ex_rmov;
+          WHEN X"2B"  => NSTATE  <= ex_inc;
+          WHEN X"2D"  => NSTATE  <= ex_dec;
+          WHEN X"2E"  => NSTATE  <= ex_print;
+          WHEN X"2C"  => NSTATE  <= ex_read;
+          WHEN X"5B"  => NSTATE  <= ex_whilebeg;
+          WHEN X"5D"  => NSTATE  <= ex_whileend;
+          WHEN X"28"  => NSTATE  <= ex_dobeg;
+          WHEN X"29"  => NSTATE  <= ex_doend;
+          WHEN OTHERS => NSTATE <= ex_noop;
+        END CASE;
+
+        -- NOOP (No operation)
+      WHEN ex_noop =>
+        NSTATE <= fetch;
+
+        -- HALT (Enter infinite loop, processor effectively halts)
+      WHEN halt =>
+        NSTATE <= halt;
+
+        -- (this should never happen)
+      WHEN OTHERS =>
+        NSTATE <= idle;
+    END CASE;
   END PROCESS;
 END behavioral;
