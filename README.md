@@ -31,8 +31,8 @@ Zadání: ??
     - [X] test cpu.test_move
   - [X] instruction 0x2E – .
     - [X] test cpu.test_print
-  - [ ] instruction 0x2C – ,
-    - [ ] test cpu.test_input
+  - [X] instruction 0x2C – ,
+    - [X] test cpu.test_input
   - [ ] instruction 0x5B – [
   - [ ] instruction 0x5D – ]
     - [ ] test cpu.test_while_loop

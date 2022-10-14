@@ -24,7 +24,7 @@ digraph G {
   decode -> ex_lmov[label = ">", constraint = "true"];
   decode -> ex_rmov[label = "<", constraint = "true"];
   decode -> ex_print_r [label = ".", constraint = "true"];
-  decode -> ex_read [label = ",", constraint = "true"];
+  decode -> ex_read_await [label = ",", constraint = "true"];
   decode -> ex_whilebeg [label = "[", constraint = "true"];
   decode -> ex_whileend [label = "]", constraint = "true"];
   decode -> ex_dobeg [label = "(", constraint = "true"];
@@ -35,6 +35,8 @@ digraph G {
   ex_dec_r -> ex_dec_w;
   ex_print_r -> ex_print_out;
   ex_print_out -> ex_print_out [label = "BUSY = 1"];
+  ex_read_await -> ex_read_await [label = "VLD = 0"];
+  ex_read_await -> ex_read_w [label = "VLD = 1"];
 
   subgraph cluster_execution {
     ex_inc_r,
@@ -45,7 +47,8 @@ digraph G {
     ex_rmov,
     ex_print_r,
     ex_print_out,
-    ex_read,
+    ex_read_await,
+    ex_read_w;
     ex_whilebeg,
     ex_whileend,
     ex_dobeg,

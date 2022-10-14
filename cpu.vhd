@@ -61,7 +61,7 @@ ARCHITECTURE behavioral OF cpu IS
     ex_dec_r, ex_dec_w,
     ex_lmov, ex_rmov,
     ex_print_r, ex_print_out,
-    ex_read,
+    ex_read_await, ex_read_w,
     ex_whilebeg, ex_whileend,
     ex_dobeg, ex_doend,
     ex_noop, halt);
@@ -175,7 +175,7 @@ BEGIN
     CNT_INC   <= '0';
     CNT_DEC   <= '0';
     MX1_SEL   <= '0';
-    MX2_SEL   <= "00";
+    MX2_SEL   <= "01";
 
     CASE PSTATE IS
         -- IDLE (initial processor state)
@@ -206,7 +206,7 @@ BEGIN
           WHEN X"3E"  => NSTATE  <= ex_lmov;
           WHEN X"3C"  => NSTATE  <= ex_rmov;
           WHEN X"2E"  => NSTATE  <= ex_print_r;
-          WHEN X"2C"  => NSTATE  <= ex_read;
+          WHEN X"2C"  => NSTATE  <= ex_read_await;
           WHEN X"5B"  => NSTATE  <= ex_whilebeg;
           WHEN X"5D"  => NSTATE  <= ex_whileend;
           WHEN X"28"  => NSTATE  <= ex_dobeg;
@@ -233,7 +233,7 @@ BEGIN
         -- tact 2 - increment value
       WHEN ex_inc_w =>
         MX1_SEL   <= '1';  -- data memory
-        MX2_SEL   <= "11"; -- increment value
+        MX2_SEL   <= "11"; -- increment value of read data
         DATA_RDWR <= '1';  -- write memory
         DATA_EN   <= '1';  -- enable memory
         NSTATE    <= fetch;
@@ -249,7 +249,7 @@ BEGIN
         -- tact 2 - decrement value
       WHEN ex_dec_w =>
         MX1_SEL   <= '1';  -- data memory
-        MX2_SEL   <= "10"; -- decrement value
+        MX2_SEL   <= "10"; -- decrement value of read data
         DATA_RDWR <= '1';  -- write memory
         DATA_EN   <= '1';  -- enable memory
         NSTATE    <= fetch;
@@ -283,6 +283,25 @@ BEGIN
           OUT_DATA <= DATA_RDATA; -- output value
           NSTATE   <= fetch;
         END IF;
+
+        -- READ (Read value from input)
+        -- tact 1 - request input
+      WHEN ex_read_await =>
+        IN_REQ <= '1'; -- request input
+
+        IF (IN_VLD = '1') THEN
+          NSTATE <= ex_read_w;
+        ELSE
+          NSTATE <= ex_read_await;
+        END IF;
+        -- tact 2 - write to memory
+      WHEN ex_read_w =>
+        PC_INC    <= '1';  -- increment program counter
+        MX1_SEL   <= '1';  -- data memory
+        MX2_SEL   <= "00"; -- input value
+        DATA_RDWR <= '1';  -- write memory
+        DATA_EN   <= '1';  -- enable memory
+        NSTATE    <= fetch;
 
         -- (fallthrough, this should not happen)
       WHEN OTHERS =>
