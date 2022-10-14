@@ -40,11 +40,11 @@ END cpu;
 -- ----------------------------------------------------------------------------
 ARCHITECTURE behavioral OF cpu IS
   -- PC (program counter)
-  SIGNAL PC       : STD_LOGIC_VECTOR(12 DOWNTO 0);
+  SIGNAL PC       : STD_LOGIC_VECTOR(11 DOWNTO 0);
   SIGNAL PC_INC   : STD_LOGIC;
   SIGNAL PC_DEC   : STD_LOGIC;
   -- PTR (pointer to data in memory)
-  SIGNAL PTR      : STD_LOGIC_VECTOR(12 DOWNTO 0);
+  SIGNAL PTR      : STD_LOGIC_VECTOR(11 DOWNTO 0);
   SIGNAL PTR_INC  : STD_LOGIC;
   SIGNAL PTR_DEC  : STD_LOGIC;
   -- CNT (counter for loops)
@@ -56,7 +56,7 @@ ARCHITECTURE behavioral OF cpu IS
   SIGNAL MX2_SEL  : STD_LOGIC_VECTOR(1 DOWNTO 0);
   SIGNAL CNT_ZERO : STD_LOGIC;
   -- FSM (finite state machine)
-  TYPE t_state IS (idle, fetch, decode, ex_lmov, ex_rmov, ex_inc, ex_dec, ex_print, ex_read, ex_whilebeg, ex_whileend, ex_dobeg, ex_doend, ex_noop, halt);
+  TYPE t_state IS (idle, fetch, decode, ex_inc_r, ex_inc_w, ex_dec, ex_lmov, ex_rmov, ex_print, ex_read, ex_whilebeg, ex_whileend, ex_dobeg, ex_doend, ex_noop, halt);
   SIGNAL PSTATE                    : t_state := idle;
   SIGNAL NSTATE                    : t_state;
   ATTRIBUTE fsm_encoding           : STRING;
@@ -123,8 +123,8 @@ BEGIN
   MX1 : PROCESS (PC, PTR, MX1_SEL)
   BEGIN
     CASE MX1_SEL IS
-      WHEN '0'    => DATA_ADDR <= PC;
-      WHEN '1'    => DATA_ADDR <= PTR;
+      WHEN '0'    => DATA_ADDR <= '0' & PC;
+      WHEN '1'    => DATA_ADDR <= '1' & PTR;
       WHEN OTHERS => NULL;
     END CASE;
   END PROCESS;
@@ -184,7 +184,7 @@ BEGIN
         IF (EN = '1') THEN
           NSTATE    <= decode;
           MX1_SEL   <= '0'; -- program memory
-          DATA_RDWR <= '1'; -- read from memory
+          DATA_RDWR <= '0'; -- read from memory
           DATA_EN   <= '1'; -- enable memory
         ELSE
           NSTATE <= idle;
@@ -192,12 +192,12 @@ BEGIN
 
         -- DECODE (decode instruction)
       WHEN decode =>
-        CASE DATA_RDATA IS
+        CASE (DATA_RDATA) IS
           WHEN X"00"  => NSTATE  <= halt;
+          WHEN X"2B"  => NSTATE  <= ex_inc_r;
+          WHEN X"2D"  => NSTATE  <= ex_dec;
           WHEN X"3E"  => NSTATE  <= ex_lmov;
           WHEN X"3C"  => NSTATE  <= ex_rmov;
-          WHEN X"2B"  => NSTATE  <= ex_inc;
-          WHEN X"2D"  => NSTATE  <= ex_dec;
           WHEN X"2E"  => NSTATE  <= ex_print;
           WHEN X"2C"  => NSTATE  <= ex_read;
           WHEN X"5B"  => NSTATE  <= ex_whilebeg;
@@ -215,7 +215,24 @@ BEGIN
       WHEN halt =>
         NSTATE <= halt;
 
-        -- (this should never happen)
+        -- INC (Increment value)
+      WHEN ex_inc_r =>
+        -- tact 1 - read value from memory
+        PC_INC    <= '1'; -- increment program counter
+        MX1_SEL   <= '1'; -- data memory
+        DATA_RDWR <= '0'; -- read memory
+        DATA_EN   <= '1'; -- enable memory
+        NSTATE    <= ex_inc_w;
+
+        -- tact 2 - increment value
+      WHEN ex_inc_w =>
+        MX1_SEL   <= '1';  -- data memory
+        MX2_SEL   <= "11"; -- increment value
+        DATA_RDWR <= '1';  -- write memory
+        DATA_EN   <= '1';  -- enable memory
+        NSTATE    <= fetch;
+
+        -- (fallthrough, this should not happen)
       WHEN OTHERS =>
         NSTATE <= idle;
     END CASE;

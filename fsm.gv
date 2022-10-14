@@ -12,16 +12,17 @@ digraph G {
   decode [fontcolor = "lightblue"];
   startup -> idle [constraint = "false"];
   idle -> fetch [label = "EN=1"];
+  idle:s -> idle [label = "EN=0"];
   fetch -> decode;
   fetch -> idle [label = "EN=0"];
   
   halt [fontcolor = "red", shape = "doublecircle"];
+  decode -> ex_inc_r [label = "+", constraint = "true"];
+  decode -> ex_dec_r [label = "-", constraint = "true"];
   decode -> halt [label = "\\0", constraint = "true"];
-  halt -> halt
+  halt:e -> halt
   decode -> ex_lmov[label = ">", constraint = "true"];
   decode -> ex_rmov[label = "<", constraint = "true"];
-  decode -> ex_inc [label = "+", constraint = "true"];
-  decode -> ex_dec [label = "-", constraint = "true"];
   decode -> ex_print [label = ".", constraint = "true"];
   decode -> ex_read [label = ",", constraint = "true"];
   decode -> ex_whilebeg [label = "[", constraint = "true"];
@@ -30,11 +31,16 @@ digraph G {
   decode -> ex_doend [label = ")", constraint = "true"];
   decode -> ex_noop [label = "", constraint = "true"];
   
+  ex_inc_r -> ex_inc_w;
+  ex_dec_r -> ex_dec_w;
+
   subgraph cluster_execution {
+    ex_inc_r,
+    ex_inc_w,
+    ex_dec_r,
+    ex_dec_w,
     ex_lmov,
     ex_rmov,
-    ex_inc,
-    ex_dec,
     ex_print,
     ex_read,
     ex_whilebeg,
@@ -42,7 +48,9 @@ digraph G {
     ex_dobeg,
     ex_doend,
     ex_noop
+    endarrow [style = "invis"]
   };
   
-  ex_noop -> fetch [ltail = "cluster_execution"];
+  ex_noop -> endarrow [style = "invis"]
+  endarrow:s -> fetch [ltail = "cluster_execution"];
 }

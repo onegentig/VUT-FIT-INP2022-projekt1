@@ -20,10 +20,10 @@ Zadání: ??
     - [X] model
     - [X] implementation base
     - [X] test cpu.test_reset
-  - [ ] instruction noop
-  - [ ] instruction 0x00 – null
-  - [ ] instruction 0x2B – +
-    - [ ] test cpu.test_increment
+  - [X] instruction noop
+  - [X] instruction 0x00 – null
+  - [X] instruction 0x2B – +
+    - [X] test cpu.test_increment
   - [ ] instruction 0x2D – -
     - [ ] test cpu.test_decrement
   - [ ] instruction 0x3C – <
