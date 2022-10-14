@@ -16,7 +16,7 @@ Zadání: ??
 - [x] Spojeznit _fitkit-build_
 - [ ] Nějáké kouzlo s `cpu.vhd`
   - [X] PC, PTR, CNT, MX
-  - [ ] FSM
+  - [X] FSM logic
     - [X] model
     - [X] implementation base
     - [X] test cpu.test_reset
@@ -26,9 +26,9 @@ Zadání: ??
     - [X] test cpu.test_increment
   - [X] instruction 0x2D – -
     - [X] test cpu.test_decrement
-  - [ ] instruction 0x3C – <
-  - [ ] instruction 0x3E – >
-    - [ ] test cpu.test_move
+  - [X] instruction 0x3C – <
+  - [X] instruction 0x3E – >
+    - [X] test cpu.test_move
   - [ ] instruction 0x2E – .
     - [ ] test cpu.test_print
   - [ ] instruction 0x2C – ,

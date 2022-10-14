@@ -222,7 +222,6 @@ BEGIN
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_inc_w;
-
         -- tact 2 - increment value
       WHEN ex_inc_w =>
         MX1_SEL   <= '1';  -- data memory
@@ -239,7 +238,6 @@ BEGIN
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_dec_w;
-
         -- tact 2 - decrement value
       WHEN ex_dec_w =>
         MX1_SEL   <= '1';  -- data memory
@@ -247,6 +245,18 @@ BEGIN
         DATA_RDWR <= '1';  -- write memory
         DATA_EN   <= '1';  -- enable memory
         NSTATE    <= fetch;
+
+        -- LMOV (Move left; increment pointer)
+      WHEN ex_lmov =>
+        PC_INC  <= '1'; -- increment program counter
+        PTR_INC <= '1'; -- increment pointer
+        NSTATE  <= fetch;
+
+        -- RMOV (Move right; decrement pointer)
+      WHEN ex_rmov =>
+        PC_INC  <= '1'; -- increment program counter
+        PTR_DEC <= '1'; -- decrement pointer
+        NSTATE  <= fetch;
 
         -- (fallthrough, this should not happen)
       WHEN OTHERS =>
