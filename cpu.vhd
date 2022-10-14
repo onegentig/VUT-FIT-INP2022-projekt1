@@ -56,7 +56,7 @@ ARCHITECTURE behavioral OF cpu IS
   SIGNAL MX2_SEL  : STD_LOGIC_VECTOR(1 DOWNTO 0);
   SIGNAL CNT_ZERO : STD_LOGIC;
   -- FSM (finite state machine)
-  TYPE t_state IS (idle, fetch, decode, ex_inc_r, ex_inc_w, ex_dec, ex_lmov, ex_rmov, ex_print, ex_read, ex_whilebeg, ex_whileend, ex_dobeg, ex_doend, ex_noop, halt);
+  TYPE t_state IS (idle, fetch, decode, ex_inc_r, ex_inc_w, ex_dec_r, ex_dec_w, ex_lmov, ex_rmov, ex_print, ex_read, ex_whilebeg, ex_whileend, ex_dobeg, ex_doend, ex_noop, halt);
   SIGNAL PSTATE                    : t_state := idle;
   SIGNAL NSTATE                    : t_state;
   ATTRIBUTE fsm_encoding           : STRING;
@@ -195,7 +195,7 @@ BEGIN
         CASE (DATA_RDATA) IS
           WHEN X"00"  => NSTATE  <= halt;
           WHEN X"2B"  => NSTATE  <= ex_inc_r;
-          WHEN X"2D"  => NSTATE  <= ex_dec;
+          WHEN X"2D"  => NSTATE  <= ex_dec_r;
           WHEN X"3E"  => NSTATE  <= ex_lmov;
           WHEN X"3C"  => NSTATE  <= ex_rmov;
           WHEN X"2E"  => NSTATE  <= ex_print;
@@ -216,8 +216,8 @@ BEGIN
         NSTATE <= halt;
 
         -- INC (Increment value)
-      WHEN ex_inc_r =>
         -- tact 1 - read value from memory
+      WHEN ex_inc_r =>
         PC_INC    <= '1'; -- increment program counter
         MX1_SEL   <= '1'; -- data memory
         DATA_RDWR <= '0'; -- read memory
@@ -228,6 +228,23 @@ BEGIN
       WHEN ex_inc_w =>
         MX1_SEL   <= '1';  -- data memory
         MX2_SEL   <= "11"; -- increment value
+        DATA_RDWR <= '1';  -- write memory
+        DATA_EN   <= '1';  -- enable memory
+        NSTATE    <= fetch;
+
+        -- DEC (Decrement value)
+        -- tact 1 - read value from memory
+      WHEN ex_dec_r =>
+        PC_INC    <= '1'; -- increment program counter
+        MX1_SEL   <= '1'; -- data memory
+        DATA_RDWR <= '0'; -- read memory
+        DATA_EN   <= '1'; -- enable memory
+        NSTATE    <= ex_dec_w;
+
+        -- tact 2 - decrement value
+      WHEN ex_dec_w =>
+        MX1_SEL   <= '1';  -- data memory
+        MX2_SEL   <= "10"; -- decrement value
         DATA_RDWR <= '1';  -- write memory
         DATA_EN   <= '1';  -- enable memory
         NSTATE    <= fetch;
