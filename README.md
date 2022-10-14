@@ -24,8 +24,8 @@ Zadání: ??
   - [X] instruction 0x00 – null
   - [X] instruction 0x2B – +
     - [X] test cpu.test_increment
-  - [ ] instruction 0x2D – -
-    - [ ] test cpu.test_decrement
+  - [X] instruction 0x2D – -
+    - [X] test cpu.test_decrement
   - [ ] instruction 0x3C – <
   - [ ] instruction 0x3E – >
     - [ ] test cpu.test_move
