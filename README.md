@@ -36,7 +36,7 @@ Zadání: ??
   - [ ] instruction 0x5B – [
   - [ ] instruction 0x5D – ]
     - [ ] test cpu.test_while_loop
-  - [ ] instruction 0x28 – ()
+  - [ ] instruction 0x28 – (
   - [ ] instruction 0x29 – )
     - [ ] test cpu.test_do_loop
   - [ ] (final boss) test cpu.test_login
