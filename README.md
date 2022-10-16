@@ -33,9 +33,9 @@ Zadání: ??
     - [X] test cpu.test_print
   - [X] instruction 0x2C – ,
     - [X] test cpu.test_input
-  - [ ] instruction 0x5B – [
-  - [ ] instruction 0x5D – ]
-    - [ ] test cpu.test_while_loop
+  - [X] instruction 0x5B – [
+  - [X] instruction 0x5D – ]
+    - [X] test cpu.test_while_loop
   - [ ] instruction 0x28 – (
   - [ ] instruction 0x29 – )
     - [ ] test cpu.test_do_loop
