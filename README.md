@@ -39,6 +39,7 @@ Zadání: ??
   - [ ] instruction 0x28 – (
   - [ ] instruction 0x29 – )
     - [ ] test cpu.test_do_loop
-  - [ ] (final boss) test cpu.test_login
+  - [X] test cpu.test_login (while loops only)
+  - [ ] test cpu.test_login (change one loop to do-while)
 - [ ] ⏰ Deadline 13.11.
 - [ ] ⏰ Hodnocení
