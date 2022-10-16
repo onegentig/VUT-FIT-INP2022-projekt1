@@ -25,8 +25,8 @@ digraph G {
   decode -> ex_rmov[label = "<", constraint = "true"];
   decode -> ex_print_r [label = ".", constraint = "true"];
   decode -> ex_read_await [label = ",", constraint = "true"];
-  decode -> ex_whilebeg [label = "[", constraint = "true"];
-  decode -> ex_whileend [label = "]", constraint = "true"];
+  decode -> ex_whilebeg_r [label = "[", constraint = "true"];
+  decode -> ex_whileend_r [label = "]", constraint = "true"];
   decode -> ex_dobeg [label = "(", constraint = "true"];
   decode -> ex_doend [label = ")", constraint = "true"];
   decode -> ex_noop [label = "", constraint = "true"];
@@ -37,6 +37,16 @@ digraph G {
   ex_print_out -> ex_print_out [label = "BUSY = 1"];
   ex_read_await -> ex_read_await [label = "VLD = 0"];
   ex_read_await -> ex_read_w [label = "VLD = 1"];
+  ex_whilebeg_r -> ex_whilebeg_cmp;
+  ex_whilebeg_cmp -> ex_whilebeg_jmp [label = "VAL = 0"];
+  ex_whilebeg_jmp -> ex_whilebeg_skip;
+  ex_whilebeg_skip -> ex_whilebeg_cnt;
+  ex_whilebeg_cnt -> ex_whilebeg_jmp [label = "CNT ≠ 0"];
+  ex_whileend_r -> ex_whileend_cmp;
+  ex_whileend_cmp -> ex_whileend_jmp [label = "VAL ≠ 0"];
+  ex_whileend_jmp -> ex_whileend_ret;
+  ex_whileend_ret -> ex_whileend_cnt;
+  ex_whileend_cnt -> ex_whileend_jmp [label = "CNT ≠ 0"];
 
   subgraph cluster_execution {
     ex_inc_r,
@@ -49,7 +59,16 @@ digraph G {
     ex_print_out,
     ex_read_await,
     ex_read_w;
-    ex_whilebeg,
+    ex_whilebeg_r,
+    ex_whilebeg_cmp,
+    ex_whilebeg_jmp,
+    ex_whilebeg_skip,
+    ex_whilebeg_cnt,
+    ex_whileend_r,
+    ex_whileend_cmp,
+    ex_whileend_jmp,
+    ex_whileend_ret,
+    ex_whileend_cnt,
     ex_whileend,
     ex_dobeg,
     ex_doend,
