@@ -65,7 +65,8 @@ ARCHITECTURE behavioral OF cpu IS
     ex_read_await, ex_read_w,
     ex_whilebeg_r, ex_whilebeg_cmp, ex_whilebeg_jmp, ex_whilebeg_skip, ex_whilebeg_cnt,
     ex_whileend_r, ex_whileend_cmp, ex_whileend_jmp, ex_whileend_ret, ex_whileend_cnt,
-    ex_dobeg, ex_doend,
+    ex_dobeg,
+    ex_doend,
     ex_noop, halt);
   SIGNAL PSTATE                    : t_state := idle;
   SIGNAL NSTATE                    : t_state;

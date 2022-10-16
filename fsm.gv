@@ -69,7 +69,6 @@ digraph G {
     ex_whileend_jmp,
     ex_whileend_ret,
     ex_whileend_cnt,
-    ex_whileend,
     ex_dobeg,
     ex_doend,
     ex_noop
