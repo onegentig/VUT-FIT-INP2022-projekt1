@@ -40,6 +40,10 @@ Zadání: ??
   - [X] instruction 0x29 – )
     - [X] test cpu.test_do_loop
   - [X] test cpu.test_login (while loops only)
-  - [ ] test cpu.test_login (change one loop to do-while)
+  - [X] test cpu.test_login (change one loop to do-while)
+  - [X] make `login.png` and extract `log.txt`
+  - [ ] custom tests for nested loops
+    - [ ] test cpu.test_custom_while_nest
+    - [ ] test cpu.test_custom_do_nest
 - [ ] ⏰ Deadline 13.11.
 - [ ] ⏰ Hodnocení

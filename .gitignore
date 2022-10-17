@@ -4,6 +4,7 @@ vhdltool.lic
 vhdltool-config.yaml
 
 ## Private files
+/private
 **-private**
 
 ## Project files to hide
