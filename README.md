@@ -14,7 +14,7 @@ Zadání: ??
 
 - [x] `login.b` program na výpis loginu
 - [x] Spojeznit _fitkit-build_
-- [ ] Nějáké kouzlo s `cpu.vhd`
+- [X] Kouzlo s `cpu.vhd`
   - [X] PC, PTR, CNT, MX
   - [X] FSM logic
     - [X] model
@@ -36,9 +36,9 @@ Zadání: ??
   - [X] instruction 0x5B – [
   - [X] instruction 0x5D – ]
     - [X] test cpu.test_while_loop
-  - [ ] instruction 0x28 – (
-  - [ ] instruction 0x29 – )
-    - [ ] test cpu.test_do_loop
+  - [X] instruction 0x28 – (
+  - [X] instruction 0x29 – )
+    - [X] test cpu.test_do_loop
   - [X] test cpu.test_login (while loops only)
   - [ ] test cpu.test_login (change one loop to do-while)
 - [ ] ⏰ Deadline 13.11.
