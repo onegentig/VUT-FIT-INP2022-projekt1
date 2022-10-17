@@ -47,6 +47,11 @@ digraph G {
   ex_whileend_jmp -> ex_whileend_ret;
   ex_whileend_ret -> ex_whileend_cnt;
   ex_whileend_cnt -> ex_whileend_jmp [label = "CNT ≠ 0"];
+  ex_doend_r -> ex_doend_cmp;
+  ex_doend_cmp -> ex_doend_jmp [label = "VAL ≠ 0"];
+  ex_doend_jmp -> ex_doend_ret;
+  ex_doend_ret -> ex_doend_cnt;
+  ex_doend_cnt -> ex_doend_jmp [label = "CNT ≠ 0"];
 
   subgraph cluster_execution {
     ex_inc_r,
@@ -70,7 +75,11 @@ digraph G {
     ex_whileend_ret,
     ex_whileend_cnt,
     ex_dobeg,
-    ex_doend,
+    ex_doend_r,
+    ex_doend_cmp,
+    ex_doend_jmp,
+    ex_doend_ret,
+    ex_doend_cnt,
     ex_noop
     endarrow [style = "invis"]
   }
