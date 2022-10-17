@@ -43,7 +43,7 @@ ARCHITECTURE behavioral OF cpu IS
   SIGNAL PC       : STD_LOGIC_VECTOR(11 DOWNTO 0);
   SIGNAL PC_INC   : STD_LOGIC;
   SIGNAL PC_DEC   : STD_LOGIC;
-  -- PTR (pointer to data in memory)
+  -- PTR (memory pointer)
   SIGNAL PTR      : STD_LOGIC_VECTOR(11 DOWNTO 0);
   SIGNAL PTR_INC  : STD_LOGIC;
   SIGNAL PTR_DEC  : STD_LOGIC;
@@ -66,7 +66,7 @@ ARCHITECTURE behavioral OF cpu IS
     ex_whilebeg_r, ex_whilebeg_cmp, ex_whilebeg_jmp, ex_whilebeg_skip, ex_whilebeg_cnt,
     ex_whileend_r, ex_whileend_cmp, ex_whileend_jmp, ex_whileend_ret, ex_whileend_cnt,
     ex_dobeg,
-    ex_doend,
+    ex_doend_r, ex_doend_cmp, ex_doend_jmp, ex_doend_ret, ex_doend_cnt,
     ex_noop, halt);
   SIGNAL PSTATE                    : t_state := idle;
   SIGNAL NSTATE                    : t_state;
@@ -88,7 +88,7 @@ BEGIN
     END IF;
   END PROCESS;
 
-  -- PTR (pointer to data in memory)
+  -- PTR (memory pointer)
   PROCESS_PTR : PROCESS (CLK, RESET)
   BEGIN
     IF (RESET = '1') THEN
@@ -117,7 +117,7 @@ BEGIN
       END IF;
     END IF;
   END PROCESS;
-  -- CNT_ZERO (CNT ?= 0 comparator)
+  -- CNT_ZERO (CNT ?= 0)
   PROCESS_CNTZERO : PROCESS (CLK, RESET)
   BEGIN
     IF (RESET = '1') THEN
@@ -131,7 +131,7 @@ BEGIN
     END IF;
   END PROCESS;
 
-  -- MX1 (program or data address in memory)
+  -- MX1 (program (0) or data (1) address in memory)
   MX1 : PROCESS (PC, PTR, MX1_SEL)
   BEGIN
     CASE MX1_SEL IS
@@ -216,7 +216,7 @@ BEGIN
           WHEN X"5B"  => NSTATE  <= ex_whilebeg_r;
           WHEN X"5D"  => NSTATE  <= ex_whileend_r;
           WHEN X"28"  => NSTATE  <= ex_dobeg;
-          WHEN X"29"  => NSTATE  <= ex_doend;
+          WHEN X"29"  => NSTATE  <= ex_doend_r;
           WHEN OTHERS => NSTATE <= ex_noop;
         END CASE;
 
@@ -236,7 +236,7 @@ BEGIN
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_inc_w;
-        -- tact 2 - increment value
+        -- tact 2 - write incremented value to memory
       WHEN ex_inc_w =>
         MX1_SEL   <= '1';  -- data memory
         MX2_SEL   <= "11"; -- increment value of read data
@@ -252,7 +252,7 @@ BEGIN
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_dec_w;
-        -- tact 2 - decrement value
+        -- tact 2 - write decremented value to memory
       WHEN ex_dec_w =>
         MX1_SEL   <= '1';  -- data memory
         MX2_SEL   <= "10"; -- decrement value of read data
@@ -280,7 +280,7 @@ BEGIN
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_print_out;
-        -- tact 2 - output value
+        -- tact 2 - await output ready and write value to output
       WHEN ex_print_out =>
         IF (OUT_BUSY = '1') THEN
           NSTATE <= ex_print_out;
@@ -291,7 +291,7 @@ BEGIN
         END IF;
 
         -- READ (Read value from input)
-        -- tact 1 - request input
+        -- tact 1 - request input (wait for IN_VLD)
       WHEN ex_read_await =>
         IN_REQ <= '1'; -- request input
         IF (IN_VLD = '1') THEN
@@ -299,7 +299,7 @@ BEGIN
         ELSE
           NSTATE <= ex_read_await;
         END IF;
-        -- tact 2 - write to memory
+        -- tact 2 - write inputted value to memory
       WHEN ex_read_w =>
         PC_INC    <= '1';  -- increment program counter
         MX1_SEL   <= '1';  -- data memory
@@ -316,7 +316,7 @@ BEGIN
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_whilebeg_cmp;
-        -- tact 2 - check if value is zero; if zero jump to end, else continue normally
+        -- tact 2 - compare value; if 0 end loop (jump to ]), else continue
       WHEN ex_whilebeg_cmp =>
         IF (DATA_RDATA = X"00") THEN
           CNT_INC   <= '1';
@@ -327,13 +327,13 @@ BEGIN
         ELSE
           NSTATE <= fetch;
         END IF;
-        -- tact 3 - loop start
+        -- tact 3 - read instruction
       WHEN ex_whilebeg_jmp =>
         MX1_SEL   <= '0'; -- program memory
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_whilebeg_skip;
-        -- tact 4 - read next instruction
+        -- tact 4 - check if instruction is ] (and adjust for nesting)
       WHEN ex_whilebeg_skip =>
         IF (DATA_RDATA = X"5B") THEN
           CNT_INC <= '1';
@@ -341,7 +341,7 @@ BEGIN
           CNT_DEC <= '1';
         END IF;
         NSTATE <= ex_whilebeg_cnt;
-        -- tact 5 - adjust counter
+        -- tact 5 - go to next instruction and continue skipping if needed
       WHEN ex_whilebeg_cnt =>
         PC_INC <= '1';
         IF (CNT_ZERO = '1') THEN
@@ -357,7 +357,7 @@ BEGIN
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_whileend_cmp;
-        -- tact 2 - check if value is zero
+        -- tact 2 - compare value; if 0 continue, else jump to [
       WHEN ex_whileend_cmp =>
         IF (DATA_RDATA = X"00") THEN
           PC_INC <= '1';
@@ -367,13 +367,13 @@ BEGIN
           PC_DEC  <= '1';
           NSTATE  <= ex_whileend_jmp;
         END IF;
-        -- tact 3 - loop start
+        -- tact 3 - read instruction
       WHEN ex_whileend_jmp =>
         MX1_SEL   <= '0'; -- program memory
         DATA_RDWR <= '0'; -- read memory
         DATA_EN   <= '1'; -- enable memory
         NSTATE    <= ex_whileend_ret;
-        -- tact 4 - read next instruction
+        -- tact 4 - check if instruction is [ (and adjust for nesting)
       WHEN ex_whileend_ret =>
         IF (DATA_RDATA = X"5D") THEN
           CNT_INC <= '1';
@@ -381,7 +381,7 @@ BEGIN
           CNT_DEC <= '1';
         END IF;
         NSTATE <= ex_whileend_cnt;
-        -- tact 5 - adjust counter
+        -- tact 5 - continue skipping to previous instruction if needed, else continue
       WHEN ex_whileend_cnt =>
         IF (CNT_ZERO = '1') THEN
           PC_INC <= '1';
@@ -389,6 +389,52 @@ BEGIN
         ELSE
           PC_DEC <= '1';
           NSTATE <= ex_whileend_jmp;
+        END IF;
+
+        -- DO_BEGIN (Do loop begin)
+      WHEN ex_dobeg =>
+        PC_INC <= '1';
+        NSTATE <= fetch;
+
+        -- DO_END (Do loop end)
+        -- tact 1 - read value from memory
+      WHEN ex_doend_r =>
+        MX1_SEL   <= '1'; -- data memory
+        DATA_RDWR <= '0'; -- read memory
+        DATA_EN   <= '1'; -- enable memory
+        NSTATE    <= ex_doend_cmp;
+        -- tact 2 - compare value; if 0 continue, else jump to (
+      WHEN ex_doend_cmp =>
+        IF (DATA_RDATA = X"00") THEN
+          PC_INC <= '1';
+          NSTATE <= fetch;
+        ELSE
+          CNT_INC <= '1';
+          PC_DEC  <= '1';
+          NSTATE  <= ex_doend_jmp;
+        END IF;
+        -- tact 3 - read instruction
+      WHEN ex_doend_jmp =>
+        MX1_SEL   <= '0'; -- program memory
+        DATA_RDWR <= '0'; -- read memory
+        DATA_EN   <= '1'; -- enable memory
+        NSTATE    <= ex_doend_ret;
+        -- tact 4 - check if instruction is ( (and adjust for nesting)
+      WHEN ex_doend_ret =>
+        IF (DATA_RDATA = X"28") THEN
+          CNT_DEC <= '1';
+        ELSIF (DATA_RDATA = X"29") THEN
+          CNT_INC <= '1';
+        END IF;
+        NSTATE <= ex_doend_cnt;
+        -- tact 5 - continue skipping to previous instruction if needed, else continue
+      WHEN ex_doend_cnt =>
+        IF (CNT_ZERO = '1') THEN
+          PC_INC <= '1';
+          NSTATE <= fetch;
+        ELSE
+          PC_DEC <= '1';
+          NSTATE <= ex_doend_jmp;
         END IF;
 
         -- (fallthrough, should not happen)
