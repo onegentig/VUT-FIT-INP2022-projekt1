@@ -6,15 +6,15 @@ _Prvý projekt (procesor s Brainfuck-like ISA) z predmetu Návrh počítačovýc
 
 <img align="right" width="55%" src='https://github.com/Onegenimasu/VUT-FIT-INP2022-projekt1/raw/main/fsm.png' />
 
-Hodnotenie: ?? / ??<br>(??)
+Hodnotenie: ?? / ??<br>（?）
 
 Zadanie: [ZADANI.md](ZADANI.md), originál [MOODLE PDF](https://moodle.vut.cz/pluginfile.php/508722/mod_resource/content/1/project1.pdf)
 
 ### TODO List
 
 - [x] `login.b` program na výpis loginu
-- [x] Spojeznit _fitkit-build_
-- [X] Kouzlo s `cpu.vhd`
+- [x] Spojazniť _fitkit-build_
+- [X] Vyčarovať `cpu.vhd`
   - [X] PC, PTR, CNT, MX
   - [X] FSM logic
     - [X] model
@@ -42,8 +42,8 @@ Zadanie: [ZADANI.md](ZADANI.md), originál [MOODLE PDF](https://moodle.vut.cz/pl
   - [X] test cpu.test_login (while loops only)
   - [X] test cpu.test_login (change one loop to do-while)
   - [X] make `login.png` and extract `log.txt`
-  - [ ] FINAL REVISION
-    - [ ] test cpu.test_custom_while_nested
-    - [ ] test cpu.test_custom_do_nested
-- [X] ⏰ Deadline 13.11.
-- [ ] ⏰ Hodnocení
+  - [X] FINAL REVISION & CUSTOM TESTS
+    - [X] test cpu.test_custom_while_nested
+    - [X] test cpu.test_custom_do_nested
+- [ ] ⏰ Deadline 13.11. 23:59:59
+- [ ] ⏰ Hodnotenie
