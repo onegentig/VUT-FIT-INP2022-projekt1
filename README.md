@@ -1,14 +1,14 @@
 # INP PROJEKT 1, FIT VUT 2022
 
-_První projekt (procesor s Brainfuck-like ISA) z předmětu Návrh počítačových systémů (INP), třetí semestr bakalářského studia BIT na FIT VUT/BUT, ak.rok 2022/2023_
+_Prvý projekt (procesor s Brainfuck-like ISA) z predmetu Návrh počítačových systémov (INP), tretí semester bakalárskeho štúdia BIT na FIT VUT/BUT, ak.rok 2022/2023_
 
-🔒 **Aktivní soukromý repozitář — nezveřejňovat!**
+🔒 **Aktívny súkromný repozitár — nezverejňovať!**
 
 <img align="right" width="55%" src='https://github.com/Onegenimasu/VUT-FIT-INP2022-projekt1/raw/main/fsm.png' />
 
-Hodnocení: ?? / ??<br>(??)
+Hodnotenie: ?? / ??<br>(??)
 
-Zadání: ??
+Zadanie: [ZADANI.md](ZADANI.md), originál [MOODLE PDF](https://moodle.vut.cz/pluginfile.php/508722/mod_resource/content/1/project1.pdf)
 
 ### TODO List
 
@@ -42,8 +42,8 @@ Zadání: ??
   - [X] test cpu.test_login (while loops only)
   - [X] test cpu.test_login (change one loop to do-while)
   - [X] make `login.png` and extract `log.txt`
-  - [ ] custom tests for nested loops
-    - [ ] test cpu.test_custom_while_nest
-    - [ ] test cpu.test_custom_do_nest
-- [ ] ⏰ Deadline 13.11.
+  - [ ] FINAL REVISION
+    - [ ] test cpu.test_custom_while_nested
+    - [ ] test cpu.test_custom_do_nested
+- [X] ⏰ Deadline 13.11.
 - [ ] ⏰ Hodnocení
