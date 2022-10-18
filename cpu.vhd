@@ -108,12 +108,12 @@ BEGIN
     IF (RESET = '1') THEN
       CNT <= (OTHERS => '0');
     ELSIF (rising_edge(CLK)) THEN
-      IF (CNT_INC = '1') THEN
+      IF (CNT_LOAD = '1') THEN
+        CNT <= X"01";
+      ELSIF (CNT_INC = '1') THEN
         CNT <= CNT + 1;
       ELSIF (CNT_DEC = '1') THEN
         CNT <= CNT - 1;
-      ELSIF (CNT_LOAD = '1') THEN
-        CNT <= X"01";
       END IF;
     END IF;
   END PROCESS;
@@ -319,7 +319,7 @@ BEGIN
         -- takt 2 - porovnanie hodnoty s nulou; ak je nula, skok na koniec cyklu
       WHEN ex_whilebeg_cmp =>
         IF (DATA_RDATA = X"00") THEN
-          CNT_INC   <= '1';
+          CNT_LOAD  <= '1';
           MX1_SEL   <= '0'; -- programová pamäť
           DATA_RDWR <= '0'; -- čítanie z pamäte
           DATA_EN   <= '1'; -- povolenie pamäte
@@ -363,9 +363,9 @@ BEGIN
           PC_INC <= '1';
           NSTATE <= fetch;
         ELSE
-          CNT_INC <= '1';
-          PC_DEC  <= '1';
-          NSTATE  <= ex_whileend_jmp;
+          CNT_LOAD <= '1';
+          PC_DEC   <= '1';
+          NSTATE   <= ex_whileend_jmp;
         END IF;
         -- takt 3 - prečítanie následujúcej inštrukcie
       WHEN ex_whileend_jmp =>
@@ -409,9 +409,9 @@ BEGIN
           PC_INC <= '1';
           NSTATE <= fetch;
         ELSE
-          CNT_INC <= '1';
-          PC_DEC  <= '1';
-          NSTATE  <= ex_doend_jmp;
+          CNT_LOAD <= '1';
+          PC_DEC   <= '1';
+          NSTATE   <= ex_doend_jmp;
         END IF;
         -- takt 3 - prečítanie následujúcej inštrukcie
       WHEN ex_doend_jmp =>
