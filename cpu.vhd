@@ -118,16 +118,12 @@ BEGIN
     END IF;
   END PROCESS;
   -- CNT_ZERO (CNT ?= 0)
-  PROCESS_CNTZERO : PROCESS (CLK, RESET)
+  PROCESS_CNTZERO : PROCESS (CNT)
   BEGIN
-    IF (RESET = '1') THEN
+    IF (CNT = X"00") THEN
       CNT_ZERO <= '1';
-    ELSIF (rising_edge(CLK)) THEN
-      IF (CNT = X"00") THEN
-        CNT_ZERO <= '1';
-      ELSE
-        CNT_ZERO <= '0';
-      END IF;
+    ELSE
+      CNT_ZERO <= '0';
     END IF;
   END PROCESS;
 
