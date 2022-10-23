@@ -218,6 +218,7 @@ BEGIN
 
         -- NOOP (žiadna operácia)
       WHEN ex_noop =>
+        PC_INC <= '1';
         NSTATE <= fetch;
 
         -- HALT (nekonečný cyklus, efektívne zastavenie procesora)
